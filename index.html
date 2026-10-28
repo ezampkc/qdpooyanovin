@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>داشبورد کیفیت - شرکت پویانوین قطعه جی | هلدینگ عظام</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+@font-face { font-family: 'BNazanin'; src: local('B Nazanin'), local('BNazanin'), local('B-Nazanin'); }
+
+:root {
+    --bg-main: #f0f4f8; --bg-card: #ffffff; --bg-chart: #fafbfd; --bg-filter: #ffffff;
+    --text-main: #1a2a44; --text-sec: #4a5568; --border: #d0d7e2; --border-light: #e0e6ed;
+    --primary: #0d3b66; --accent: #c9a227; --shadow: rgba(0,0,0,0.08);
+    --desc-bg: #f0f4f9; --tab-inactive: #e8edf4; --subtab-text: #445;
+    --footer-bg: #0d3b66; --footer-text: #ffffff; --input-bg: #fafbfd;
+    --update-bg: #fff8e1; --update-border: #e6b84d; --update-text: #5a4a00;
+    --avg-bg: #e8f5e9; --avg-border: #4caf50; --avg-text: #1b5e20;
+}
+[data-theme="dark"] {
+    --bg-main: #0f1724; --bg-card: #1a2332; --bg-chart: #1e2a3d; --bg-filter: #1a2332;
+    --text-main: #e4e9f2; --text-sec: #a0aec0; --border: #2d3748; --border-light: #2d3748;
+    --primary: #4a90d9; --accent: #e6b84d; --shadow: rgba(0,0,0,0.4);
+    --desc-bg: #1e2a3d; --tab-inactive: #2d3748; --subtab-text: #cbd5e0;
+    --footer-bg: #0a1120; --footer-text: #e4e9f2; --input-bg: #1e2a3d;
+    --update-bg: #2d2416; --update-border: #e6b84d; --update-text: #f5d97a;
+    --avg-bg: #1b3a2a; --avg-border: #66bb6a; --avg-text: #a5d6a7;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; background: var(--bg-main); color: var(--text-main); line-height: 1.8; transition: background 0.3s, color 0.3s; }
+.english { font-family: 'Times New Roman', Times, serif; }
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #1e5a8e 100%);
+    color: #fff; padding: 25px 40px; box-shadow: 0 4px 12px var(--shadow);
+    border-bottom: 4px solid var(--accent);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px;
+}
+header .title-block { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+header .title-block h1 { font-size: 30px; letter-spacing: 0.5px; font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; font-weight: bold; }
+header .title-block h1 .holding { font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; font-weight: bold; font-size: 30px; opacity: 0.95; }
+header .title-block h1 .divider { margin: 0 10px; opacity: 0.7; }
+.update-bar {
+    background: var(--update-bg); border: 1px solid var(--update-border); border-radius: 20px;
+    padding: 6px 18px; font-size: 14px; color: var(--update-text);
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 6px;
+    font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif;
+}
+.update-bar .label { font-weight: bold; }
+.update-bar .date { font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; font-weight: bold; }
+
+.theme-toggle {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff;
+    padding: 8px 16px; border-radius: 25px; cursor: pointer; font-family: inherit; font-size: 14px;
+    display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s;
+}
+.theme-toggle:hover { background: rgba(255,255,255,0.25); }
+
+.container { max-width: 1400px; margin: 25px auto; padding: 0 20px; }
+
+.filter-panel {
+    background: var(--bg-filter); border: 1px solid var(--border); border-radius: 8px;
+    padding: 18px 22px; margin-bottom: 20px; box-shadow: 0 2px 6px var(--shadow);
+    display: flex; flex-wrap: wrap; gap: 18px; align-items: center;
+}
+.filter-panel label { font-weight: bold; margin-left: 8px; color: var(--primary); }
+.filter-panel select {
+    font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; padding: 7px 12px; border: 1px solid var(--border);
+    border-radius: 5px; background: var(--input-bg); color: var(--text-main);
+    font-size: 14px; min-width: 120px; cursor: pointer;
+}
+.filter-panel select:focus { outline: 2px solid var(--primary); }
+.filter-panel select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.mode-box {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px; background: var(--desc-bg);
+    border: 1px dashed var(--primary); border-radius: 5px;
+    cursor: pointer; user-select: none;
+}
+.mode-box input { cursor: pointer; width: 16px; height: 16px; }
+.mode-box label { margin: 0; cursor: pointer; font-size: 13px; color: var(--text-main); font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; }
+.mode-box.active-mode { background: var(--primary); border-color: var(--primary); }
+.mode-box.active-mode label { color: #fff; font-weight: bold; }
+
+.btn-reset {
+    font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; padding: 8px 16px; background: #6c757d; color: #fff;
+    border: none; border-radius: 5px; cursor: pointer; font-size: 14px; margin-right: auto;
+}
+.btn-reset:hover { background: #545b62; }
+
+.tabs {
+    display: flex; flex-wrap: wrap; gap: 4px; background: var(--bg-card);
+    padding: 8px; border-radius: 8px 8px 0 0; border-bottom: 3px solid var(--accent);
+}
+.tab-btn {
+    font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; padding: 9px 16px; background: var(--tab-inactive);
+    border: 1px solid var(--border); border-radius: 5px 5px 0 0;
+    cursor: pointer; font-size: 14px; color: var(--text-main); transition: all 0.25s;
+}
+.tab-btn:hover { filter: brightness(0.95); }
+.tab-btn.active { color: #fff; font-weight: bold; border-color: transparent; }
+
+.tab-content {
+    background: var(--bg-card); border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 8px 8px; padding: 22px; min-height: 500px; box-shadow: 0 2px 6px var(--shadow);
+}
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.sub-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px; }
+.sub-tab-btn {
+    font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; padding: 6px 13px; background: transparent;
+    border: 1px solid var(--border); border-radius: 4px; cursor: pointer;
+    font-size: 13px; color: var(--subtab-text); transition: all 0.2s;
+}
+.sub-tab-btn:hover { background: var(--desc-bg); }
+.sub-tab-btn.active { color: #fff; font-weight: bold; border-color: transparent; }
+
+.chart-wrapper { background: var(--bg-chart); border: 1px solid var(--border-light); border-radius: 6px; padding: 18px; margin-bottom: 18px; }
+.chart-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--accent);
+    flex-wrap: wrap; gap: 10px;
+}
+.chart-title { font-size: 17px; color: var(--primary); font-weight: bold; flex: 1; min-width: 200px; font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; }
+
+.header-badges { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+.unit-badge {
+    padding: 5px 14px; border-radius: 15px; font-size: 14px; font-weight: bold;
+    color: #fff; font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; letter-spacing: 0.5px;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.unit-badge .unit-label { font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; font-size: 13px; opacity: 0.95; }
+
+.avg-card {
+    background: var(--avg-bg); border: 2px solid var(--avg-border);
+    border-radius: 8px; padding: 6px 14px;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 14px; color: var(--avg-text); font-weight: bold;
+    flex-direction: column;
+}
+.avg-card .avg-label { font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; }
+.avg-card .avg-value {
+    font-family: 'Times New Roman', Times, serif; font-size: 15px;
+    font-weight: bold; direction: ltr; color: var(--avg-text);
+}
+.avg-card .avg-percent {
+    font-family: 'Times New Roman', Times, serif; font-size: 12px;
+    direction: ltr; color: var(--avg-text); opacity: 0.85;
+}
+
+.chart-container { position: relative; height: 450px; margin-bottom: 10px; }
+.chart-description {
+    margin-top: 16px; padding: 14px 16px; background: var(--desc-bg);
+    border-right: 4px solid var(--primary); border-radius: 4px;
+    font-size: 14px; color: var(--text-sec); line-height: 2; text-align: justify;
+    font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif;
+}
+.chart-description strong { color: var(--primary); }
+
+.multi-chart-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px;
+}
+.multi-chart-grid .chart-container { height: 320px; position: relative; border: 1px solid var(--border-light); border-radius: 6px; padding: 10px; background: var(--bg-card); }
+.multi-chart-grid .multi-label {
+    position: absolute; top: 8px; right: 12px;
+    background: var(--primary); color: #fff;
+    padding: 3px 10px; border-radius: 12px;
+    font-size: 12px; font-weight: bold; z-index: 10;
+    font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif;
+}
+
+footer { background: var(--footer-bg); color: var(--footer-text); padding: 20px; text-align: center; margin-top: 40px; border-top: 4px solid var(--accent); }
+footer p { margin: 4px 0; font-size: 14px; font-family: 'BNazanin', 'B Nazanin', 'Tahoma', serif; }
+footer a { color: var(--accent); text-decoration: none; font-family: 'Times New Roman', Times, serif; }
+footer a:hover { text-decoration: underline; }
+
+.sub-pane { display: none; }
+.sub-pane.active { display: block; }
+
+@media (max-width: 768px) {
+    header { padding: 18px 20px; }
+    header .title-block h1 { font-size: 22px; }
+    header .title-block h1 .holding { font-size: 22px; }
+    .filter-panel { flex-direction: column; align-items: stretch; }
+    .chart-container { height: 350px; }
+    .multi-chart-grid { grid-template-columns: 1fr; }
+    .btn-reset { margin-right: 0; }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="title-block">
+        <h1>
+            داشبورد کیفیت شرکت پویانوین قطعه جی
+            <span class="divider">|</span>
+            <span class="holding">هلدینگ عظام</span>
+        </h1>
+        <div class="update-bar">
+            <span class="label">آخرین به‌روزرسانی:</span>
+            <span class="date">مهر 1405</span>
+        </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="تغییر حالت نمایش">
+        <span class="icon" id="themeIcon">🌙</span>
+        <span id="themeLabel">حالت شب</span>
+    </button>
+</header>
+
+<div class="container">
+
+    <div class="filter-panel">
+        <div>
+            <label for="yearFilter">سال:</label>
+            <select id="yearFilter">
+                <option value="all">همه سال‌ها</option>
+                <option value="1402">1402</option>
+                <option value="1403">1403</option>
+                <option value="1404">1404</option>
+                <option value="1405">1405</option>
+            </select>
+        </div>
+        <div>
+            <label for="monthFilter">ماه:</label>
+            <select id="monthFilter">
+                <option value="all">همه ماه‌ها</option>
+                <option value="1">فروردین</option><option value="2">اردیبهشت</option>
+                <option value="3">خرداد</option><option value="4">تیر</option>
+                <option value="5">مرداد</option><option value="6">شهریور</option>
+                <option value="7">مهر</option><option value="8">آبان</option>
+                <option value="9">آذر</option><option value="10">دی</option>
+                <option value="11">بهمن</option><option value="12">اسفند</option>
+            </select>
+        </div>
+        <div>
+            <label for="viewModeFilter">نمایش:</label>
+            <select id="viewModeFilter">
+                <option value="monthly">ماهانه</option>
+                <option value="quarterly">سه‌ماهه</option>
+                <option value="semiannual">شش‌ماهه</option>
+                <option value="yearly">سالانه</option>
+            </select>
+        </div>
+        <div class="mode-box" id="modeOverviewBox">
+            <input type="checkbox" id="modeOverview">
+            <label for="modeOverview">در یک نگاه</label>
+        </div>
+        <div class="mode-box" id="modeYoYBox">
+            <input type="checkbox" id="modeYoY">
+            <label for="modeYoY">مقایسه سر به سر سال‌ها</label>
+        </div>
+        <button class="btn-reset" onclick="resetFilters()">بازنشانی فیلترها</button>
+    </div>
+
+    <div class="tabs" id="mainTabs">
+        <button class="tab-btn active" data-tab="internal">TOTAL PPM (ضایعات داخلی)</button>
+        <button class="tab-btn" data-tab="rework">TOTAL INTERNAL PPM (دوباره‌کاری)</button>
+        <button class="tab-btn" data-tab="receiving-pz">RECEIVING PPM (پایاذوب کاوه)</button>
+        <button class="tab-btn" data-tab="receiving-rp">RECEIVING PPM (رهپویان)</button>
+        <button class="tab-btn" data-tab="external">EXTERNAL PPM (برگشت از فروش)</button>
+        <button class="tab-btn" data-tab="oee">شاخص OEE</button>
+        <button class="tab-btn" data-tab="mtbf">MTBF / MTTR</button>
+    </div>
+
+    <div class="tab-content" id="tabContent"></div>
+</div>
+
+<footer>
+    <p><strong>داشبورد کیفیت شرکت پویانوین قطعه جی | هلدینگ عظام</strong></p>
+    <p>گردآورنده: واحد تضمین کیفیت | Copyright © <span class="english">Abbas Sadeghi</span></p>
+    <p>ارتباط: <a href="mailto:1abbassdgh@gmail.com" class="english">1abbassdgh@gmail.com</a></p>
+</footer>
+
+<script>
+const MONTHS_FA = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+const SEASONS_FA = ['بهار','تابستان','پاییز','زمستان'];
+const YEARS = [1402, 1403, 1404, 1405];
+
+function buildMonthlyLabels() {
+    const labels = [];
+    YEARS.forEach(y => MONTHS_FA.forEach(m => labels.push(m + ' ' + String(y).slice(-2))));
+    return labels;
+}
+const ALL_MONTHLY_LABELS = buildMonthlyLabels();
+
+const TAB_COLORS = {
+    'internal':     { light: '#0d3b66', dark: '#5ba3e0' },
+    'rework':       { light: '#8b4513', dark: '#d49a6a' },
+    'receiving-pz': { light: '#2e7d32', dark: '#66bb6a' },
+    'receiving-rp': { light: '#6a1b9a', dark: '#ba68c8' },
+    'external':     { light: '#c62828', dark: '#ef5350' },
+    'oee':          { light: '#ef6c00', dark: '#ffb74d' },
+    'mtbf':         { light: '#00838f', dark: '#4dd0e1' }
+};
+const YOY_COLORS = ['#0d3b66', '#c62828', '#2e7d32', '#ef6c00'];
+const YOY_COLORS_DARK = ['#5ba3e0', '#ef5350', '#66bb6a', '#ffb74d'];
+
+function getTabColor(tabKey) {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const palette = TAB_COLORS[tabKey] || TAB_COLORS['internal'];
+    return isDark ? palette.dark : palette.light;
+}
+function getYoyColors() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    return isDark ? YOY_COLORS_DARK : YOY_COLORS;
+}
+
+const TAB_STRUCTURE = {
+    'internal': {
+        title: 'TOTAL PPM (ضایعات داخلی)',
+        subtabs: [
+            { id: 'internal-total', label: 'مجموع ضایعات داخلی', chartTitle: 'مجموع ضایعات ماشینکاری داخلی پویانوین (TOTAL PPM)', unit: 'PPM',
+              desc: 'در این دسته‌بندی آمار تولید و ضایعات بوش TU3 وارد نشده است، زیرا تمام مراحل ماشینکاری توسط تأمین‌کننده انجام می‌گردد. برای گروه محصول براکت به جای آمار تولید، آمار «برگشت امانی ما نزد دیگران – برگشت به خرید» از راهکاران اخذ و جایگذاری شده است.' },
+            { id: 'internal-bush', label: 'گروه بوش', chartTitle: 'ضایعات گروه محصول بوش با منشا ماشینکاری', unit: 'PPM',
+              desc: 'این قسمت تنها شامل آمار تولیدی بوش XU7 (خروجی OP20) و ضایعات ماشینکاری آن در تمام OPها است. ضایعات و تولید بوش TU3 در این قسمت نیامده است زیرا این محصول تماماً برونسپاری می‌شود.' },
+            { id: 'internal-disk', label: 'گروه دیسک و کاسه', chartTitle: 'ضایعات گروه محصول دیسک و کاسه با منشا ماشینکاری', unit: 'PPM',
+              desc: 'پیک ضایعات در اسفند 1403 به دلیل تولید کم این ماه نسبت به ماه‌های گذشته بوده است. از مهر 1405 بخشی از آمار تولید قطعات دیسک هواخنک تا مرحله بالانس و سنگ‌زنی برونسپاری می‌گردد.' },
+            { id: 'internal-bracket', label: 'گروه براکت', chartTitle: 'ضایعات گروه محصول براکت با منشا ماشینکاری', unit: 'PPM',
+              desc: 'با توجه به اینکه مراحل ماشینکاری قطعه براکت توسط پیمانکار انجام می‌شود و تنها دوباره‌کاری قطعات محصول در شرکت پویانوین انجام می‌گیرد، امکان ضایع شدن در شرکت پویانوین وجود دارد.' },
+            { id: 'internal-cylinder', label: 'گروه سرسیلندر', chartTitle: 'ضایعات گروه محصول سرسیلندر با منشا ماشینکاری', unit: 'PPM',
+              desc: 'تولید سرسیلندر در شرکت پویانوین از خرداد 1403 آغاز گردید اما همچنان به تولید انبوه نرسیده، لذا داده تاریخی جهت ثبت آمار ضایعات داخلی همچنان موجود نیست.' }
+        ]
+    },
+    'rework': {
+        title: 'TOTAL INTERNAL PPM (دوباره‌کاری)',
+        subtabs: [
+            { id: 'rework-total', label: 'مجموع دوباره‌کاری داخلی', chartTitle: 'مجموع دوباره‌کاری داخلی پویانوین (TOTAL INTERNAL PPM)', unit: 'PPM',
+              desc: 'در این دسته‌بندی قطعه بوش TU3 به دلیل ماشینکاری کامل توسط پیمانکار لحاظ نشده است. افزایش میزان دوباره‌کاری در اسفند 04 به دلیل تولید کم قطعات در این ماه است.' },
+            { id: 'rework-bush', label: 'گروه بوش', chartTitle: 'دوباره‌کاری گروه محصول بوش', unit: 'PPM',
+              desc: 'افزایش PPM دوباره‌کاری گروه محصول بوش در فروردین 05 به دلیل انجام عملیات مجدد برروی بوش‌های XU7 برگشتی و تبدیل آنها به محصول بوده است.' },
+            { id: 'rework-disk', label: 'گروه دیسک و کاسه', chartTitle: 'دوباره‌کاری گروه محصول دیسک و کاسه', unit: 'PPM',
+              desc: 'پیک دوباره‌کاری در اسفند 03 به دلیل تولید کم قطعه در این ماه و بازکاری قطعات شش ماه دوم سال در این ماه می‌باشد.' },
+            { id: 'rework-bracket', label: 'گروه براکت', chartTitle: 'دوباره‌کاری گروه محصول براکت', unit: 'PPM',
+              desc: 'با توجه به اینکه تمام قطعات محصول براکت دنا داخل شرکت پویانوین در قسمت قلاویز M7 و M14 بازکاری می‌شوند، مقدار PPM برابر 1,000,000 است.' },
+            { id: 'rework-cylinder', label: 'گروه سرسیلندر', chartTitle: 'دوباره‌کاری گروه محصول سرسیلندر', unit: 'PPM',
+              desc: 'با توجه به عدم تولید انبوه این گروه محصول، داده‌ای جهت محاسبه PPM دوباره‌کاری ثبت نشده است.' }
+        ]
+    },
+    'receiving-pz': {
+        title: 'RECEIVING PPM (پایاذوب کاوه)',
+        subtabs: [
+            { id: 'rp-total', label: 'مجموع ضایعات ریخته‌گری', chartTitle: 'مجموع ضایعات ریخته‌گری با منشا تأمین‌کننده (پایاذوب کاوه)', unit: 'PPM',
+              desc: 'از ابتدای سال 1402 تا آخر خرداد ماه 1404 اطلاعات از فایل اکسل داشبورد استعلام گردیده است. از تیرماه 1404 مرجع اطلاعات از راهکاران سیستم می‌باشد.' },
+            { id: 'rp-bush', label: 'گروه بوش', chartTitle: 'RECEIVING PPM گروه محصول بوش (پایاذوب کاوه)', unit: 'PPM',
+              desc: 'مرجع داده‌ها مشابه توضیحات مجموع ضایعات ریخته‌گری است.' },
+            { id: 'rp-disk', label: 'گروه دیسک و کاسه', chartTitle: 'RECEIVING PPM گروه محصول دیسک و کاسه (پایاذوب کاوه)', unit: 'PPM',
+              desc: 'پیک نمودار در اسفند 03 به خاطر تولید کم این ماه نسبت به سایر ماه‌های سال است.' },
+            { id: 'rp-bracket', label: 'گروه براکت', chartTitle: 'RECEIVING PPM گروه محصول براکت (پایاذوب کاوه)', unit: 'PPM',
+              desc: 'با توجه به برونسپاری قطعه براکت، مخرج کسر محاسبه ضایعات مقدار «برگشت امانی ما نزد دیگران» است.' },
+            { id: 'rp-cylinder', label: 'گروه سرسیلندر', chartTitle: 'RECEIVING PPM گروه محصول سرسیلندر (پایاذوب کاوه)', unit: 'PPM',
+              desc: 'تولید سرسیلندر در شرکت پویانوین از خرداد 1403 آغاز گردید اما همچنان به تولید انبوه نرسیده.' }
+        ]
+    },
+    'receiving-rp': {
+        title: 'RECEIVING PPM (رهپویان)',
+        subtabs: [
+            { id: 'rrp-total', label: 'مجموع ضایعات ریخته‌گری کشف‌شده', chartTitle: 'مجموع ضایعات ریخته‌گری کشف‌شده با منشا پایاذوب در رهپویان', unit: 'PPM',
+              desc: 'اطلاعات این بخش از ابتدای سال 1403 در فرمت فایل اکسل داشبورد لحاظ شده بود. از تیرماه 1404 سورس معتبری ارائه نشده است.' },
+            { id: 'rrp-bush', label: 'گروه بوش', chartTitle: 'ضایعات کشف‌شده گروه بوش در رهپویان', unit: 'PPM',
+              desc: 'مرجع داده‌ها مشابه توضیحات مجموع ضایعات ریخته‌گری کشف‌شده است.' },
+            { id: 'rrp-disk', label: 'گروه دیسک و کاسه', chartTitle: 'ضایعات کشف‌شده گروه دیسک و کاسه در رهپویان', unit: 'PPM',
+              desc: 'از ابتدای سال 1402 تا پایان آذرماه 1403 قطعات گروه محصول دیسک و کاسه جهت ماشینکاری به شرکت رهپویان برونسپاری نشده است.' },
+            { id: 'rrp-bracket', label: 'گروه براکت', chartTitle: 'ضایعات کشف‌شده گروه براکت در رهپویان', unit: 'PPM',
+              desc: 'اطلاعات تولید قطعه براکت از راهکاران سیستم «امانی ما نزد دیگران» تکمیل گردیده است.' }
+        ]
+    },
+    'external': {
+        title: 'EXTERNAL PPM (برگشت از فروش)',
+        subtabs: [
+            { id: 'ext-total', label: 'مجموع ضایعات برگشت از فروش', chartTitle: 'مجموع ضایعات برگشت از فروش (ریخته‌گری و ماشینکاری)', unit: 'PPM',
+              desc: 'اطلاعات از راهکاران سیستم و بر اساس سه مشتری رادمان یدک اروند، پیستون ایران و پایاذوب کاوه استعلام گردیده است.' },
+            { id: 'ext-bush', label: 'گروه بوش (پیستون)', chartTitle: 'PPM گروه محصول بوش (پیستون)', unit: 'PPM',
+              desc: 'اطلاعات فروش از راهکاران و برگشت از فروش از ابتدای سال 1405 با هماهنگی با مسئول تضمین کیفیت شرکت پیستون ایران اخذ می‌شود.' },
+            { id: 'ext-disk', label: 'گروه دیسک و کاسه (رادمان)', chartTitle: 'PPM گروه محصول دیسک و کاسه (رادمان)', unit: 'PPM',
+              desc: 'پیک نمودار در اسفند 03 به دلیل کاهش حجم فروش این ماه نسبت به سایر ماه‌های سال است.' },
+            { id: 'ext-bracket', label: 'گروه براکت (پایاذوب)', chartTitle: 'PPM گروه محصول براکت (پایاذوب کاوه)', unit: 'PPM',
+              desc: 'تاکنون از سمت مشتری قطعه‌ای در این گروه محصول برگشت از فروش نشده است.' },
+            { id: 'ext-cylinder', label: 'گروه سرسیلندر (رادمان)', chartTitle: 'PPM گروه محصول سرسیلندر (رادمان)', unit: 'PPM',
+              desc: 'گروه محصول سرسیلندر OM355 هنوز به تولید انبوه نرسیده لذا نمودار به صورت دوره‌های سه‌ماهه از ابتدای سال 1404 محاسبه شده است.' }
+        ]
+    },
+    'oee': {
+        title: 'شاخص OEE',
+        subtabs: [
+            { id: 'oee-oee', label: 'شاخص OEE', chartTitle: 'شاخص OEE ماهانه', unit: '%',
+              desc: 'روند OEE نشان می‌دهد بهره‌وری تجهیزات در برخی از ماه‌ها به هدف 80% نزدیک شده است.' },
+            { id: 'oee-availability', label: 'شاخص دسترسی', chartTitle: 'شاخص دسترسی (Availability) - OEE', unit: '%',
+              desc: 'این شاخص نسبت زمانی که تجهیز واقعاً در حال تولید است به کل زمانی که برنامه‌ریزی شده بود کار کند را نشان می‌دهد.' },
+            { id: 'oee-performance', label: 'شاخص عملکرد', chartTitle: 'شاخص عملکرد (Performance) - OEE', unit: '%',
+              desc: 'این شاخص میزان واقعی تولید دستگاه به برنامه تولید طراحی شده (ایده‌آل) آن را بیان می‌کند.' },
+            { id: 'oee-quality', label: 'شاخص کیفیت', chartTitle: 'شاخص کیفیت (Quality) - OEE', unit: '%',
+              desc: 'شاخص کیفیت برابر است با نسبت تعداد قطعات سالم و بدون نقص به کل قطعات تولید شده. حد پذیرش و هدفی برای این شاخص تعریف نشده است.' }
+        ]
+    },
+    'mtbf': {
+        title: 'MTBF / MTTR',
+        subtabs: [
+            { id: 'mtbf-bush', label: 'MTBF بوش', chartTitle: 'MTBF گروه محصول بوش', unit: 'ساعت',
+              desc: 'در تابستان 02 به دلیل خرابی مکرر دستگاه‌های رایدر مقدار MTBF با کاهش مواجه بود. همچنین در بهار و تابستان 04 نیز دستگاه‌های رایدر به دلیل خرابی ناشی از فرسودگی مرتباً تحت تعمیر قرار می‌گرفتند.' },
+            { id: 'mttr-bush', label: 'MTTR بوش', chartTitle: 'MTTR گروه محصول بوش', unit: 'دقیقه',
+              desc: 'در زمستان 02 به دلیل زمانبر شدن ساخت قطعه و خرید PLC مدت زمان تعمیرات افزایش یافت. در پاییز 03 به دلیل مشکل سیم‌پیچی کلاچ دستگاه‌های رایدر مدت زمان تعمیرات افزایش یافت.' },
+            { id: 'mtbf-disk', label: 'MTBF دیسک و کاسه', chartTitle: 'MTBF گروه محصول دیسک و کاسه', unit: 'ساعت',
+              desc: 'در تابستان 02 به دلیل خرابی‌های مکرر دستگاه‌های CN01 تا CN05 و همچنین مشکل محور دستگاه ACE میزان MTBF پایین است.' },
+            { id: 'mttr-disk', label: 'MTTR دیسک و کاسه', chartTitle: 'MTTR گروه محصول دیسک و کاسه', unit: 'دقیقه',
+              desc: 'در تابستان 02 به دلیل خرابی گیربکس تارت دستگاه‌های CN06 تا CN09 مدت زمان تعمیرات افزایش یافت.' },
+            { id: 'mtbf-cyl', label: 'MTBF سرسیلندر', chartTitle: 'MTBF گروه محصول سرسیلندر', unit: 'ساعت',
+              desc: 'با توجه به عدم تولید انبوه این گروه محصول، هنوز شاخص MTBF برای آن محاسبه نشده است.' },
+            { id: 'mttr-cyl', label: 'MTTR سرسیلندر', chartTitle: 'MTTR گروه محصول سرسیلندر', unit: 'دقیقه',
+              desc: 'با توجه به عدم تولید انبوه این گروه محصول، هنوز شاخص MTTR برای آن محاسبه نشده است.' }
+        ]
+    }
+};
+
+const N = NaN;
+const DATA = {
+    internal_total: {
+        production: [56692,97333,100645,106768,115826,91899,124587,138773,125689,123823,124523,69209,92189,142472,96618,106456,99704,109194,131098,104916,97298,103161,73906,77153,52352,79040,85989,95386,113007,129569,157738,151170,144830,140856,141669,38031,53123,129408,139535,110174,117307,113358,146687,0,0,0,0,0],
+        scrap: [357,470,2006,381,292,1159,2796,1150,1286,633,362,748,422,328,188,292,372,1341,294,240,320,215,154,1838,211,207,399,179,197,264,337,934,185,235,186,51,47,112,177,133,173,213,130,0,0,0,0,0],
+        target: 1, unit: 'PPM'
+    },
+    internal_bush: {
+        production: [25410,50004,51005,65643,75707,49563,76070,98914,95569,86126,79709,37676,65325,92753,45715,68979,64233,69308,79992,47812,43832,52320,25893,68508,41275,56076,47690,62319,69452,74430,94071,105216,95892,81357,79065,20750,18064,92437,81948,71307,68875,57456,77744,0,0,0,0,0],
+        scrap: [91,192,993,49,154,909,2467,963,1126,462,196,376,289,207,53,31,187,268,88,33,195,20,17,1441,160,58,234,28,21,158,214,645,43,25,16,6,6,14,75,58,13,18,33,0,0,0,0,0],
+        target: 2000, accept: 3000, unit: 'PPM'
+    },
+    internal_disk: {
+        production: [30052,44653,47411,40979,39196,40611,47390,38904,28226,33198,39862,31533,25799,39808,40815,33488,35471,39886,50761,57104,53466,50841,48013,5286,8277,16228,36316,29733,40227,40902,34901,34448,40430,51148,54089,14507,31559,35078,46736,38867,45012,50279,61756,0,0,0,0,0],
+        scrap: [264,278,1013,332,138,250,329,187,160,171,166,372,131,114,135,259,185,1067,206,207,125,195,137,363,51,149,165,151,176,103,123,255,137,201,130,44,41,97,102,75,158,192,96,0,0,0,0,0],
+        target: 3000, accept: 4000, unit: 'PPM'
+    },
+    internal_bracket: {
+        production: [1230,2676,2229,146,923,1725,1127,955,1894,4499,4952,0,1065,9911,10088,3989,0,0,345,0,0,0,0,3359,2800,6736,1983,3334,947,0,2613,5813,8508,7091,8515,2774,3500,1893,10570,0,3420,5475,7166,0,0,0,0,0],
+        scrap: [2,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,31,1,0,0,1,0,0,2,0,1,0,0,0,0,0,0],
+        target: 0, accept: 500, unit: 'PPM'
+    },
+    /* ⭐ اصلاح: سرسیلندر - شهریور 05 (index 41) و مهر 05 (index 42) داده دارد، آبان 05 (index 43) production=0, scrap=0 */
+    internal_cylinder: {
+        production: [0,0,0,0,0,0,0,0,0,0,0,0,
+                     0,0,0,0,0,0,0,0,0,0,0,0,
+                     0,0,0,0,0,0,0,0,0,0,0,0,
+                     0,0,0,0,0,0,139,21,0,0,0,0],
+        scrap: [0,0,0,0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,3,1,0,0,0,0],
+        target: 5000, accept: 10000, unit: 'PPM', startMonth: 41
+    },
+    rework_total: {
+        production: [56692,97333,100645,106768,115826,91899,124587,138773,125689,123823,124523,69209,92189,142472,96618,106456,99704,109194,131098,104916,97298,103161,73906,77153,52352,79040,85989,95386,113007,129569,157738,151170,144830,140856,141669,38031,53123,129408,139254,110174,113887,113358,146687,0,0,0,0,0],
+        scrap: [1230,2699,2229,148,923,1904,1427,955,2092,4499,4952,93,1065,9911,10088,3989,0,425,345,0,0,0,0,3956,2800,6736,1983,6210,947,3625,5938,10781,15863,13609,15874,8337,614,3054,10570,1,0,5477,7170,0,0,0,0,0],
+        target: 1, unit: 'PPM'
+    },
+    rework_bush: {
+        production: [25410,50004,51005,65643,75707,49563,76070,98914,95569,86126,79709,37676,65325,92753,45715,68979,64233,69308,79992,47812,43832,52320,25893,68508,41275,56076,47690,62319,69452,74430,94071,105216,95892,81357,79065,20750,18064,92437,81948,71307,68875,57456,77744,0,0,0,0,0],
+        scrap: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,569,0,0,0,0,0,0,0,0,0,0,0],
+        target: 0, accept: 0, unit: 'PPM', startMonth: 36
+    },
+    rework_disk: {
+        production: [30052,44653,47411,40979,39196,40611,47390,38904,28226,33198,39862,31533,25799,39808,40815,33488,35471,39886,50761,57104,53466,50841,48013,5286,8277,16228,36316,29733,40227,40902,34901,34448,40430,51148,54089,14507,31559,35078,46736,38867,45012,50279,61756,0,0,0,0,0],
+        scrap: [0,23,0,18,0,179,300,0,198,0,0,93,0,0,0,0,0,425,0,0,0,0,0,597,0,0,0,0,0,0,0,0,0,13,0,31,45,1160,0,1,0,2,4,0,0,0,0,0],
+        target: 0, accept: 2000, unit: 'PPM'
+    },
+    rework_bracket: {
+        production: [1230,2676,2229,146,923,1725,1127,955,1894,4499,4952,69209,1065,9911,10088,3989,0,0,345,0,0,0,0,3359,2800,6736,1983,3334,947,2613,5813,8508,7091,8515,2774,3500,1893,10570,0,3420,5475,7166,0,0,0,0,0,0],
+        scrap: [1230,2676,2229,146,923,1725,1127,955,1894,4499,4952,69209,1065,9911,10088,3989,0,0,345,0,0,0,0,3359,2800,6736,1983,3334,947,2613,5813,8508,7091,8515,2774,3500,1893,10570,0,3420,5475,7166,0,0,0,0,0,0],
+        target: 0, accept: 2000, unit: 'PPM'
+    },
+    rework_cylinder: {
+        production: [0,0,0,0,0,0,0,0,0,0,0,0,
+                     0,0,0,0,0,0,0,0,0,0,0,0,
+                     0,0,0,0,0,0,0,0,0,0,0,0,
+                     0,0,0,0,0,0,139,21,0,0,0,0],
+        scrap: [0,0,0,0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,0,0,0],
+        target: 0, accept: 0, unit: 'PPM', startMonth: 41
+    },
+    rp_total: {
+        production: [57167,98282,103134,117721,116441,92149,149819,139136,150831,123986,124650,91770,92189,142878,97467,106797,99704,120981,131263,104916,97298,103161,73906,77155,52352,79043,86486,97644,114231,140902,174154,169023,154559,164539,155711,41659,56178,139046,150735,126951,141396,132606,159538,0,0,0,0,0],
+        scrap: [2440,4253,7079,4656,5764,4299,5604,2801,7092,8210,5127,8070,3420,3791,4267,4626,3734,3820,3572,2344,3006,2322,989,2294,244,579,2404,3117,2842,7223,10034,6058,2192,1769,2162,1179,164,304,4121,1350,2888,2958,3869,0,0,0,0,0],
+        target: 1, unit: 'PPM'
+    },
+    rp_bush: {
+        production: [25410,50004,53183,76129,75707,49563,100883,98914,120681,86126,79709,60237,65325,92753,45715,68979,64233,81095,79992,47812,43832,52320,25893,68508,41275,56076,47690,64577,70676,77491,94071,105216,95892,81357,84844,24372,21119,101826,93148,88084,87797,76299,90595,0,0,0,0,0],
+        scrap: [850,2598,5771,3451,4584,2622,4118,2042,5169,6058,3736,3234,2705,2754,1555,3296,2765,2771,1667,81,1190,813,17,1060,51,89,176,2067,1358,6086,8978,5449,1606,817,1603,800,4,8,2628,260,1605,883,2073,0,0,0,0,0],
+        target: 20000, accept: 30000, unit: 'PPM'
+    },
+    rp_disk: {
+        production: [30052,44653,47411,40979,39196,40611,47390,38904,28226,33198,39862,31533,25799,39808,40815,33488,35471,39886,50761,57104,53466,50841,48013,1234,8277,16228,36316,29733,40153,49174,50956,52301,50156,74365,61788,14507,31559,35078,46805,38867,45012,50279,61756,0,0,0,0,0],
+        scrap: [1115,504,794,978,824,1147,977,628,1893,1977,1262,4836,642,664,1862,927,879,1041,1789,2261,1816,1509,972,5286,193,487,997,1047,1477,1137,1012,608,583,918,559,379,160,292,1134,1090,1275,1611,1754,0,0,0,0,0],
+        target: 20000, accept: 30000, unit: 'PPM'
+    },
+    rp_bracket: {
+        production: [1705,3625,2540,613,1538,1975,1546,1318,1924,4662,5079,0,1065,10317,10937,4330,0,0,510,0,0,0,0,3361,2800,6739,2480,3334,947,0,2974,5813,8511,7557,9079,2780,3500,2142,4281,0,3420,5880,7166,0,0,0,0,0],
+        scrap: [475,1151,514,227,356,536,509,131,30,175,129,0,73,373,850,501,0,0,118,0,0,0,0,0,0,3,497,0,0,0,0,0,3,762,505,0,0,249,281,0,0,405,0,0,0,0,0,0],
+        target: 10000, accept: 40000, unit: 'PPM'
+    },
+    rp_cylinder: {
+        production: [0,0,0,0,0,0,0,0,0,0,0,0,
+                     0,0,0,0,0,0,0,0,0,0,0,0,
+                     0,0,0,0,0,0,0,0,0,0,0,0,
+                     0,0,0,0,0,0,139,21,0,0,0,0],
+        scrap: [0,0,0,0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,0,0,0,
+                0,0,0,0,0,0,59,17,0,0,0,0],
+        target: 20000, accept: 40000, unit: 'PPM', startMonth: 41
+    },
+    rrp_total: {
+        production: [30970,34154,50788,66279,75571,66600,91024,95685,81468,73271,74682,53682,40497,87829,62663,71349,68201,78348,88225,55318,57550,51931,60783,31601,8045,15447,45245,51046,53672,65413,77493,91615,84087,87198,67545,16928,21761,80132,74825,67635,64362,47514,59068,0,0,0,0,0],
+        scrap: [0,0,0,0,0,0,0,0,0,0,0,0,0,183,136,167,250,61,29,18,12,0,0,0,0,0,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        target: 1, unit: 'PPM'
+    },
+    rrp_bush: {
+        production: [29265,30529,48248,65666,74033,64625,89478,94367,79544,68609,69603,53862,39432,77512,51726,67019,68201,78348,88225,55318,57550,48490,49420,29095,5245,8708,42765,47712,52725,57141,58464,67949,65850,56424,50767,14148,18261,77990,70544,67635,60942,41634,47362,0,0,0,0,0],
+        scrap: [0,0,0,0,0,0,0,0,0,0,0,0,0,183,136,167,250,61,29,18,12,0,0,0,0,0,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        target: 0, accept: 0, unit: 'PPM'
+    },
+    rrp_disk: {
+        production: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3441,11363,828,0,0,0,0,0,8272,16055,17853,9726,23217,7699,0,0,0,0,0,0,0,0,0,0,4540,0,0,0],
+        scrap: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,293,41,119,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        target: 0, accept: 0, unit: 'PPM', startMonth: 21
+    },
+    rrp_bracket: {
+        production: [1705,3625,2540,613,1538,1975,1546,1318,1924,4662,5079,0,1065,10317,10937,4330,0,0,510,0,0,0,0,3361,2800,6739,2480,3334,947,0,2974,5813,8511,7557,9079,2780,3500,2142,4281,0,3420,5880,7166,0,0,0,0,0],
+        scrap: [475,1151,514,227,356,536,509,131,30,175,129,0,73,373,850,501,0,0,118,0,0,0,0,0,0,3,497,0,0,0,0,0,3,762,505,0,0,249,281,0,0,405,0,0,0,0,0,0],
+        target: 10000, accept: 40000, unit: 'PPM'
+    },
+    ext_total: {
+        production: [50185,84340,115554,114246,86512,109636,143722,167229,145303,128718,149267,102877,68847,111710,114940,97450,114997,113483,139858,125395,116201,112077,124204,68304,89987,73378,85339,95686,114541,133844,144192,159326,150024,146850,156732,18725,43271,141265,141168,132883,140343,137073,143567,0,0,0,0,0],
+        scrap: [161,0,2558,132,5850,5449,146,0,4147,0,511,6221,0,0,5821,0,4464,1120,0,408,0,291,4671,596,0,0,4,270,0,459,554,4902,96,495,664,5719,573,0,308,2,1375,647,0,0,0,0,0,0],
+        target: 1, unit: 'PPM'
+    },
+    ext_bush: {
+        production: [49392,58394,75495,73031,69047,73226,92550,120554,116163,99284,95801,52636,61588,72032,68690,80956,70939,78366,78283,66006,55034,52957,45746,66500,50894,62682,52829,63241,72160,72408,92104,102790,96924,72500,89108,12894,25935,103309,93267,86005,84434,65947,82603,0,0,0,0,0],
+        scrap: [0,0,2485,0,5850,4888,0,0,4006,0,0,5636,0,0,5821,0,4464,0,0,0,0,0,4245,0,0,0,0,0,0,0,0,4515,0,0,0,5719,224,588,755,0,1375,0,0,0,0,0,0,0],
+        target: 0, accept: 600, unit: 'PPM', startMonth: 2
+    },
+    ext_disk: {
+        production: [0,23576,40296,41215,21961,39922,50028,45580,30987,25486,51872,52353,5555,26064,21536,3387,40148,35117,52952,56125,59967,53986,78458,1116,37103,7259,29341,32445,40480,58615,47350,51079,45189,69550,61217,5831,10936,37956,46301,41854,51855,64306,53024,0,0,0,0,0],
+        scrap: [0,161,73,132,0,561,146,0,141,0,511,585,0,0,0,0,0,1120,0,408,0,291,426,596,0,0,4,246,0,459,554,387,86,488,664,0,573,0,308,2,0,647,0,0,0,0,0,0],
+        target: 2000, accept: 4000, unit: 'PPM', startMonth: 1
+    },
+    ext_bracket: {
+        production: [793,2370,2248,0,1354,1376,1144,1095,2159,3923,1594,3524,1704,2281,3425,4267,0,0,8623,624,0,3634,0,688,1990,3377,3169,0,1901,2797,4708,5403,7904,4800,6400,0,6400,0,1600,5000,4000,6820,7940,0,0,0,0,0],
+        scrap: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        target: 0, accept: 0, unit: 'PPM'
+    },
+    ext_cylinder: {
+        production: [0,0,0,0,60,24,91,7,0,78,0,0,0,0,0,0],
+        scrap: [0,0,0,0,24,0,6,7,0,0,0,0,0,0,0,0],
+        target: 0, accept: 0, quarterly: true, unit: 'PPM',
+        labels: ['بهار 04','تابستان 04','پاییز 04','زمستان 04','بهار 05','تابستان 05','پاییز 05','زمستان 05'],
+        startYear: 1404, startSeason: 0
+    },
+    oee: {
+        values: [N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,0.617,0.493,0.497,0.587,0.574,0.578,0.612,0.720,0.702,0.742,0.785,0.807,0.602,0.846,0.773,0.669,0.704,0.670,0.814,0,0,0,0,0],
+        target: 0.80, accept: 0.70, isPercent: true, isOEE: true, unit: '%'
+    },
+    oee_av: {
+        values: [N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,0.67,0.57,0.83,1.00,0.60,0.65,0.73,0.76,0.74,0.76,0.79,0.83,0.66,0.85,0.78,0.69,0.73,0.71,0.83,0,0,0,0,0],
+        target: 0, accept: 0, isPercent: true, isOEE: true, unit: '%'
+    },
+    oee_perf: {
+        values: [N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,0.93,0.86,0.61,0.60,0.97,0.93,0.88,0.98,0.96,0.99,1.00,1.00,0.93,1.01,1.01,0.97,0.99,0.96,1.00,0,0,0,0,0],
+        target: 0, accept: 0, isPercent: true, isOEE: true, unit: '%'
+    },
+    oee_qual: {
+        values: [N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,N,1.000,0.996,0.984,0.978,0.982,0.962,0.956,0.972,0.990,0.991,0.988,0.972,0.981,0.989,0.980,0.995,0.971,0.982,0.979,0,0,0,0,0],
+        target: 0, accept: 0, isPercent: true, isOEE: true, unit: '%'
+    },
+    mtbf_bush: {
+        labels: ['بهار 02','تابستان 02','پاییز 02','زمستان 02','بهار 03','تابستان 03','پاییز 03','زمستان 03','بهار 04','تابستان 04','پاییز 04','زمستان 04','بهار 05','تابستان 05'],
+        values: [284,186,447,389,548,635,568,630,222,143,625,198,543,563],
+        target: 1000, accept: 500, quarterly: true, isMTBF: true, unit: 'ساعت', startYear: 1402, startSeason: 0
+    },
+    mttr_bush: {
+        labels: ['بهار 02','تابستان 02','پاییز 02','زمستان 02','بهار 03','تابستان 03','پاییز 03','زمستان 03','بهار 04','تابستان 04','پاییز 04','زمستان 04','بهار 05','تابستان 05'],
+        values: [96,100,156,369,149,52,485,437,152,212,215,102,318,119],
+        target: 60, accept: 150, quarterly: true, isMTTR: true, unit: 'دقیقه', startYear: 1402, startSeason: 0
+    },
+    mtbf_disk: {
+        labels: ['بهار 02','تابستان 02','پاییز 02','زمستان 02','بهار 03','تابستان 03','پاییز 03','زمستان 03','بهار 04','تابستان 04','پاییز 04','زمستان 04','بهار 05','تابستان 05'],
+        values: [1087,469,1046,503,695,666,1388,605,393,625,516,813,974,538],
+        target: 1500, accept: 1000, quarterly: true, isMTBF: true, unit: 'ساعت', startYear: 1402, startSeason: 0
+    },
+    mttr_disk: {
+        labels: ['بهار 02','تابستان 02','پاییز 02','زمستان 02','بهار 03','تابستان 03','پاییز 03','زمستان 03','بهار 04','تابستان 04','پاییز 04','زمستان 04','بهار 05','تابستان 05'],
+        values: [96,455,127,211,184,142,454,446,128,159,116,186,204,303],
+        target: 60, accept: 100, quarterly: true, isMTTR: true, unit: 'دقیقه', startYear: 1402, startSeason: 0
+    },
+    mtbf_cyl: {
+        labels: ['بهار 04','تابستان 04','پاییز 04','زمستان 04','بهار 05','تابستان 05'],
+        values: [0,0,0,0,0,0], target: 0, accept: 0, quarterly: true, isMTBF: true, unit: 'ساعت',
+        startYear: 1404, startSeason: 0
+    },
+    mttr_cyl: {
+        labels: ['بهار 04','تابستان 04','پاییز 04','زمستان 04'],
+        values: [0,0,0,0], target: 0, accept: 0, quarterly: true, isMTTR: true, unit: 'دقیقه',
+        startYear: 1404, startSeason: 0
+    }
+};
+
+const SUB_TO_DATA = {
+    'internal-total':'internal_total','internal-bush':'internal_bush','internal-disk':'internal_disk',
+    'internal-bracket':'internal_bracket','internal-cylinder':'internal_cylinder',
+    'rework-total':'rework_total','rework-bush':'rework_bush','rework-disk':'rework_disk',
+    'rework-bracket':'rework_bracket','rework-cylinder':'rework_cylinder',
+    'rp-total':'rp_total','rp-bush':'rp_bush','rp-disk':'rp_disk','rp-bracket':'rp_bracket','rp-cylinder':'rp_cylinder',
+    'rrp-total':'rrp_total','rrp-bush':'rrp_bush','rrp-disk':'rrp_disk','rrp-bracket':'rrp_bracket',
+    'ext-total':'ext_total','ext-bush':'ext_bush','ext-disk':'ext_disk','ext-bracket':'ext_bracket','ext-cylinder':'ext_cylinder',
+    'oee-oee':'oee','oee-availability':'oee_av','oee-performance':'oee_perf','oee-quality':'oee_qual',
+    'mtbf-bush':'mtbf_bush','mttr-bush':'mttr_bush','mtbf-disk':'mtbf_disk','mttr-disk':'mttr_disk',
+    'mtbf-cyl':'mtbf_cyl','mttr-cyl':'mttr_cyl'
+};
+
+const SUB_TO_TAB = {};
+Object.keys(SUB_TO_DATA).forEach(sub => {
+    const tab = sub.split('-')[0];
+    if (['internal','rework','oee'].includes(tab)) SUB_TO_TAB[sub] = tab;
+    else if (sub.startsWith('rp-')) SUB_TO_TAB[sub] = 'receiving-pz';
+    else if (sub.startsWith('rrp-')) SUB_TO_TAB[sub] = 'receiving-rp';
+    else if (sub.startsWith('ext-')) SUB_TO_TAB[sub] = 'external';
+    else if (sub.startsWith('mtbf-') || sub.startsWith('mttr-')) SUB_TO_TAB[sub] = 'mtbf';
+});
+
+const CHARTS = {};
+let currentSubTab = 'internal-total';
+let currentTab = 'internal';
+let viewMode = 'monthly';
+let overviewMode = false;
+let yoyMode = false;
+
+function buildTabContent() {
+    const container = document.getElementById('tabContent');
+    let html = '';
+    Object.keys(TAB_STRUCTURE).forEach(tabKey => {
+        const tab = TAB_STRUCTURE[tabKey];
+        html += `<div id="${tabKey}" class="tab-pane ${tabKey === 'internal' ? 'active' : ''}">`;
+        html += `<div class="sub-tabs">`;
+        tab.subtabs.forEach((st, idx) => {
+            html += `<button class="sub-tab-btn ${idx === 0 ? 'active' : ''}" data-subtab="${st.id}">${st.label}</button>`;
+        });
+        html += `</div>`;
+        tab.subtabs.forEach((st, idx) => {
+            html += `<div id="sub-${st.id}" class="sub-pane ${idx === 0 ? 'active' : ''}">`;
+            html += `<div class="chart-wrapper">`;
+            html += `<div class="chart-header">`;
+            html += `<div class="chart-title">${st.chartTitle}</div>`;
+            html += `<div class="header-badges">`;
+            html += `<div class="avg-card"><span class="avg-label">میانگین:</span><span class="avg-value" id="avg-${st.id}">-</span><span class="avg-percent" id="avg-percent-${st.id}"></span></div>`;
+            html += `<div class="unit-badge" style="background:${getTabColor(tabKey)};"><span class="unit-label">واحد:</span> ${st.unit}</div>`;
+            html += `</div>`;
+            html += `</div>`;
+            html += `<div class="chart-container" id="chart-container-${st.id}"><canvas id="chart-${st.id}"></canvas></div>`;
+            html += `<div class="multi-chart-grid multi-view" id="multi-${st.id}" style="display:none;">`;
+            html += `<div class="chart-container"><canvas id="chart-${st.id}-m"></canvas><div class="multi-label">ماهانه</div></div>`;
+            html += `<div class="chart-container"><canvas id="chart-${st.id}-q"></canvas><div class="multi-label">سه‌ماهه</div></div>`;
+            html += `<div class="chart-container"><canvas id="chart-${st.id}-s"></canvas><div class="multi-label">شش‌ماهه</div></div>`;
+            html += `<div class="chart-container"><canvas id="chart-${st.id}-y"></canvas><div class="multi-label">سالانه</div></div>`;
+            html += `</div>`;
+            html += `<div class="chart-container yoy-view" id="yoy-${st.id}" style="display:none;"><canvas id="chart-${st.id}-yoy"></canvas></div>`;
+            html += `<div class="chart-description"><strong>توضیحات:</strong> ${st.desc}</div>`;
+            html += `</div></div>`;
+        });
+        html += `</div>`;
+    });
+    container.innerHTML = html;
+}
+
+function updateViewModeOptions() {
+    const seriesKey = SUB_TO_DATA[currentSubTab];
+    const series = DATA[seriesKey];
+    const viewModeFilter = document.getElementById('viewModeFilter');
+    const isQ = series && series.quarterly === true;
+    
+    viewModeFilter.innerHTML = '';
+    
+    if (isQ) {
+        viewModeFilter.innerHTML = `
+            <option value="quarterly">سه‌ماهه</option>
+            <option value="semiannual">شش‌ماهه</option>
+            <option value="yearly">سالانه</option>
+        `;
+        viewModeFilter.value = 'quarterly';
+        viewMode = 'quarterly';
+    } else {
+        viewModeFilter.innerHTML = `
+            <option value="monthly">ماهانه</option>
+            <option value="quarterly">سه‌ماهه</option>
+            <option value="semiannual">شش‌ماهه</option>
+            <option value="yearly">سالانه</option>
+        `;
+        viewModeFilter.value = 'monthly';
+        viewMode = 'monthly';
+    }
+}
+
+function getFilteredIndices() {
+    const year = document.getElementById('yearFilter').value;
+    const month = document.getElementById('monthFilter').value;
+    let indices = [];
+    for (let i = 0; i < 48; i++) indices.push(i);
+    if (year !== 'all') {
+        const y = parseInt(year);
+        indices = indices.filter(i => YEARS[Math.floor(i/12)] === y);
+    }
+    if (month !== 'all') {
+        const m = parseInt(month) - 1;
+        indices = indices.filter(i => (i % 12) === m);
+    }
+    return indices;
+}
+
+function calcPPM(productionArr, scrapArr) {
+    let totalProd = 0, totalScrap = 0;
+    for (let i = 0; i < productionArr.length; i++) {
+        const p = productionArr[i], s = scrapArr[i];
+        if (!isNaN(p) && p !== null && p > 0) totalProd += p;
+        if (!isNaN(s) && s !== null) totalScrap += s;
+    }
+    if (totalProd === 0) return null;
+    return (totalScrap / totalProd) * 1000000;
+}
+
+/* ⭐ اصلاح: تابع PPM ماهانه - اگر production=0 و scrap=0 باشد، PPM=0 */
+function getMonthlyPPM(seriesKey) {
+    const series = DATA[seriesKey];
+    const indices = getFilteredIndices();
+    const labels = [], data = [];
+    indices.forEach(i => {
+        const p = series.production[i], s = series.scrap[i];
+        if (!isNaN(p) && p !== null && !isNaN(s) && s !== null) {
+            labels.push(ALL_MONTHLY_LABELS[i]);
+            if (p === 0) {
+                if (s === 0) {
+                    data.push(0);
+                } else {
+                    data.push(null);
+                }
+            } else {
+                data.push(+((s / p) * 1000000).toFixed(2));
+            }
+        }
+    });
+    return { labels, data };
+}
+
+function aggregatePPMQuarterly(production, scrap, indices) {
+    const quarters = {};
+    const order = [];
+    indices.forEach(i => {
+        const monthIdx = i % 12;
+        const year = YEARS[Math.floor(i/12)];
+        const q = monthIdx <= 2 ? 0 : monthIdx <= 5 ? 1 : monthIdx <= 8 ? 2 : 3;
+        const key = SEASONS_FA[q] + ' ' + String(year).slice(-2);
+        if (!quarters[key]) { quarters[key] = { prod: 0, scrap: 0 }; order.push(key); }
+        const p = production[i], s = scrap[i];
+        if (!isNaN(p) && p !== null && p > 0) quarters[key].prod += p;
+        if (!isNaN(s) && s !== null) quarters[key].scrap += s;
+    });
+    const labels = [], data = [];
+    order.forEach(k => {
+        if (quarters[k].prod > 0) {
+            labels.push(k);
+            data.push(+((quarters[k].scrap / quarters[k].prod) * 1000000).toFixed(2));
+        }
+    });
+    return { labels, data };
+}
+
+function aggregatePPMSemi(production, scrap, indices) {
+    const semis = {};
+    const order = [];
+    indices.forEach(i => {
+        const monthIdx = i % 12;
+        const year = YEARS[Math.floor(i/12)];
+        const half = monthIdx <= 5 ? 1 : 2;
+        const key = (half === 1 ? 'نیمه اول ' : 'نیمه دوم ') + year;
+        if (!semis[key]) { semis[key] = { prod: 0, scrap: 0 }; order.push(key); }
+        const p = production[i], s = scrap[i];
+        if (!isNaN(p) && p !== null && p > 0) semis[key].prod += p;
+        if (!isNaN(s) && s !== null) semis[key].scrap += s;
+    });
+    const labels = [], data = [];
+    order.forEach(k => {
+        if (semis[k].prod > 0) {
+            labels.push(k);
+            data.push(+((semis[k].scrap / semis[k].prod) * 1000000).toFixed(2));
+        }
+    });
+    return { labels, data };
+}
+
+function aggregatePPMYearly(production, scrap, indices) {
+    const years = {};
+    const order = [];
+    indices.forEach(i => {
+        const year = YEARS[Math.floor(i/12)];
+        const key = 'سال ' + year;
+        if (!years[key]) { years[key] = { prod: 0, scrap: 0 }; order.push(key); }
+        const p = production[i], s = scrap[i];
+        if (!isNaN(p) && p !== null && p > 0) years[key].prod += p;
+        if (!isNaN(s) && s !== null) years[key].scrap += s;
+    });
+    const labels = [], data = [];
+    order.forEach(k => {
+        if (years[k].prod > 0) {
+            labels.push(k);
+            data.push(+((years[k].scrap / years[k].prod) * 1000000).toFixed(2));
+        }
+    });
+    return { labels, data };
+}
+
+/* ⭐ اصلاح: توابع تجمیع OEE با labels و data */
+function aggregateOEEQuarterlyFromData(labels, data) {
+    const quarters = {};
+    const order = [];
+    labels.forEach((l, i) => {
+        const parts = l.split(' ');
+        const monthIdx = MONTHS_FA.indexOf(parts[0]);
+        const year = parts[1];
+        const q = monthIdx <= 2 ? 0 : monthIdx <= 5 ? 1 : monthIdx <= 8 ? 2 : 3;
+        const key = SEASONS_FA[q] + ' ' + year;
+        if (!quarters[key]) { quarters[key] = { sum: 0, count: 0 }; order.push(key); }
+        const v = data[i];
+        if (!isNaN(v) && v !== null) {
+            quarters[key].sum += v;
+            quarters[key].count += 1;
+        }
+    });
+    const outLabels = [], outData = [];
+    order.forEach(k => {
+        if (quarters[k].count > 0) {
+            outLabels.push(k);
+            outData.push(+(quarters[k].sum / quarters[k].count).toFixed(4));
+        }
+    });
+    return { labels: outLabels, data: outData };
+}
+
+function aggregateOEESemiFromData(labels, data) {
+    const semis = {};
+    const order = [];
+    labels.forEach((l, i) => {
+        const parts = l.split(' ');
+        const monthIdx = MONTHS_FA.indexOf(parts[0]);
+        const year = parts[1];
+        const half = (monthIdx >= 0 && monthIdx <= 5) ? 1 : 2;
+        const key = (half === 1 ? 'نیمه اول ' : 'نیمه دوم ') + year;
+        if (!semis[key]) { semis[key] = { sum: 0, count: 0 }; order.push(key); }
+        const v = data[i];
+        if (!isNaN(v) && v !== null) {
+            semis[key].sum += v;
+            semis[key].count += 1;
+        }
+    });
+    const outLabels = [], outData = [];
+    order.forEach(k => {
+        if (semis[k].count > 0) {
+            outLabels.push(k);
+            outData.push(+(semis[k].sum / semis[k].count).toFixed(4));
+        }
+    });
+    return { labels: outLabels, data: outData };
+}
+
+function aggregateOEEYearlyFromData(labels, data) {
+    const years = {};
+    const order = [];
+    labels.forEach((l, i) => {
+        const year = l.split(' ')[1];
+        if (!years[year]) { years[year] = { sum: 0, count: 0 }; order.push(year); }
+        const v = data[i];
+        if (!isNaN(v) && v !== null) {
+            years[year].sum += v;
+            years[year].count += 1;
+        }
+    });
+    const outLabels = [], outData = [];
+    order.forEach(k => {
+        if (years[k].count > 0) {
+            outLabels.push('سال ' + k);
+            outData.push(+(years[k].sum / years[k].count).toFixed(4));
+        }
+    });
+    return { labels: outLabels, data: outData };
+}
+
+function parseQuarterLabel(raw) {
+    if (!raw) return null;
+    const parts = String(raw).trim().split(/\s+/);
+    const qi = SEASONS_FA.indexOf(parts[0]);
+    if (qi < 0) return null;
+    let n = parseInt(parts[1], 10);
+    if (isNaN(n)) return null;
+    const year = n < 100 ? 1400 + n : n;
+    if (year < 1402 || year > 1405) return null;
+    return { year, qi, index: (year - 1402) * 4 + qi };
+}
+
+function getQuarterTimeline(series) {
+    const tl = new Array(16).fill(null);
+    if (!series || !series.labels) return tl;
+    series.labels.forEach((label, i) => {
+        const p = parseQuarterLabel(label);
+        if (!p) return;
+        const v = series.values[i];
+        tl[p.index] = (v === null || v === undefined || isNaN(v)) ? null : Number(v);
+    });
+    return tl;
+}
+
+function maskTimelineByYear(tl, yearValue) {
+    if (yearValue === 'all') return tl.slice();
+    const y = parseInt(yearValue);
+    return tl.map((v, i) => (1402 + Math.floor(i / 4) === y) ? v : null);
+}
+
+function quarterGroupLabel(startIndex, spanQuarters) {
+    const y = 1402 + Math.floor(startIndex / 4);
+    const qi = startIndex % 4;
+    const yy = String(y).slice(-2);
+    if (spanQuarters === 1) return SEASONS_FA[qi] + ' ' + yy;
+    if (spanQuarters === 2) return (qi === 0 ? 'نیمه اول ' : 'نیمه دوم ') + yy;
+    return 'سال ' + yy;
+}
+
+function aggregateQuarterTimeline(tl, spanQuarters) {
+    const out = { labels: [], data: [] };
+    for (let start = 0; start < 16; start += spanQuarters) {
+        const chunk = [];
+        for (let k = 0; k < spanQuarters; k++) {
+            const idx = start + k;
+            if (idx < 16 && tl[idx] !== null && !isNaN(tl[idx])) {
+                chunk.push(tl[idx]);
+            }
+        }
+        if (chunk.length === 0) continue;
+        const sum = chunk.reduce((a, b) => a + b, 0);
+        out.labels.push(quarterGroupLabel(start, spanQuarters));
+        out.data.push(+(sum / chunk.length).toFixed(2));
+    }
+    return out;
+}
+
+function calculateAverage(seriesKey) {
+    const series = DATA[seriesKey];
+    if (!series) return null;
+    
+    if (series.quarterly) {
+        const year = document.getElementById('yearFilter').value;
+        const tl = maskTimelineByYear(getQuarterTimeline(series), year);
+        const valid = tl.filter(v => v !== null && !isNaN(v));
+        if (!valid.length) return null;
+        return valid.reduce((a, b) => a + b, 0) / valid.length;
+    }
+    
+    if (series.isOEE) {
+        const indices = getFilteredIndices();
+        const valid = indices.map(i => series.values[i]).filter(v => !isNaN(v) && v !== null);
+        if (!valid.length) return null;
+        return valid.reduce((a, b) => a + b, 0) / valid.length;
+    }
+    
+    const indices = getFilteredIndices();
+    return calcPPM(
+        indices.map(i => series.production[i]),
+        indices.map(i => series.scrap[i])
+    );
+}
+
+function formatAvgValue(value, series) {
+    if (value === null || isNaN(value)) return { main: '-', percent: '' };
+    if (series.isPercent) {
+        return { main: (value * 100).toFixed(2) + '%', percent: '' };
+    }
+    if (series.unit === 'PPM') {
+        const ppm = Math.round(value);
+        const percent = (value / 10000).toFixed(2);
+        return { main: ppm.toLocaleString('en-US'), percent: `(${percent}%)` };
+    }
+    return { main: value.toFixed(2), percent: '' };
+}
+
+function getChartOptions(series) {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const gridColor = isDark ? '#3d4a5e' : '#d0d7e2';
+    const textColor = isDark ? '#e4e9f2' : '#1a2a44';
+    const isPercent = series.isPercent || false;
+    
+    return {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 400 },
+        plugins: {
+            legend: {
+                labels: {
+                    font: { family: "'BNazanin','B Nazanin','Tahoma',serif", size: 15, weight: 'bold' },
+                    color: textColor,
+                    padding: 15,
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                }
+            },
+            tooltip: {
+                titleFont: { family: "'BNazanin','B Nazanin','Tahoma',serif", size: 15, weight: 'bold' },
+                bodyFont: { family: "'Times New Roman',Times,serif", size: 15, weight: 'bold' },
+                backgroundColor: isDark ? '#2d3748' : '#fff',
+                titleColor: isDark ? '#fff' : '#0d3b66',
+                bodyColor: isDark ? '#e4e9f2' : '#1a2a44',
+                borderColor: isDark ? '#4a90d9' : '#0d3b66',
+                borderWidth: 1,
+                padding: 12,
+                displayColors: true,
+                callbacks: {
+                    label: function(ctx) {
+                        let v = ctx.parsed.y;
+                        if (v === null || isNaN(v)) return ctx.dataset.label + ': -';
+                        if (isPercent) {
+                            return ctx.dataset.label + ': ' + (v * 100).toFixed(2) + '%';
+                        } else if (series.unit === 'PPM') {
+                            const ppm = Math.round(v);
+                            const percent = (v / 10000).toFixed(2);
+                            return ctx.dataset.label + ': ' + ppm.toLocaleString('en-US') + ' PPM (' + percent + '%)';
+                        } else {
+                            return ctx.dataset.label + ': ' + v.toLocaleString('en-US') + ' ' + series.unit;
+                        }
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    font: { family: "'BNazanin','B Nazanin','Tahoma',serif", size: 13, weight: 'bold' },
+                    color: textColor,
+                    maxRotation: 60, minRotation: 45
+                },
+                grid: { color: gridColor, lineWidth: 1 }
+            },
+            y: {
+                ticks: {
+                    font: { family: "'Times New Roman',Times,serif", size: 14, weight: 'bold' },
+                    color: textColor,
+                    callback: function(v) {
+                        if (isPercent) return (v*100).toFixed(0) + '%';
+                        return Math.round(v).toLocaleString('en-US');
+                    }
+                },
+                grid: { color: gridColor, lineWidth: 1 },
+                beginAtZero: true
+            }
+        }
+    };
+}
+
+function makeDataset(label, data, color, opts = {}) {
+    return {
+        label,
+        data,
+        borderColor: color,
+        backgroundColor: color,
+        borderWidth: opts.borderWidth || 3,
+        fill: false,
+        tension: 0,
+        pointRadius: opts.pointRadius !== undefined ? opts.pointRadius : 6,
+        pointHoverRadius: 9,
+        pointBackgroundColor: color,
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        borderDash: opts.borderDash || [],
+        spanGaps: opts.spanGaps !== undefined ? opts.spanGaps : true
+    };
+}
+
+function addTargetLines(datasets, series, length) {
+    if (series.target !== undefined && series.target !== 0) {
+        datasets.push({
+            label: 'هدف',
+            data: Array(length).fill(series.target),
+            borderColor: '#27ae60',
+            borderDash: [8, 5],
+            borderWidth: 3,
+            pointRadius: 0,
+            fill: false
+        });
+    }
+    if (series.accept !== undefined && series.accept !== 0) {
+        datasets.push({
+            label: 'حد پذیرش',
+            data: Array(length).fill(series.accept),
+            borderColor: '#c0392b',
+            borderDash: [3, 4],
+            borderWidth: 3,
+            pointRadius: 0,
+            fill: false
+        });
+    }
+}
+
+function destroyChart(key) {
+    if (CHARTS[key]) { CHARTS[key].destroy(); CHARTS[key] = null; }
+}
+
+function renderSingleChart(canvasId, labels, data, seriesKey, datasetLabel, color, spanGaps) {
+    const ctx = document.getElementById(canvasId);
+    if (!ctx) return;
+    destroyChart(canvasId);
+    const series = DATA[seriesKey];
+    const tabColor = color || getTabColor(currentTab);
+    const datasets = [makeDataset(datasetLabel || 'مقدار واقعی', data, tabColor, { spanGaps: spanGaps !== undefined ? spanGaps : true })];
+    addTargetLines(datasets, series, labels.length);
+    CHARTS[canvasId] = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets },
+        options: getChartOptions(series)
+    });
+}
+
+function renderChart(subId) {
+    const seriesKey = SUB_TO_DATA[subId];
+    const series = DATA[seriesKey];
+    if (!series) return;
+
+    const avg = calculateAverage(seriesKey);
+    const formatted = formatAvgValue(avg, series);
+    const avgEl = document.getElementById('avg-' + subId);
+    const avgPercentEl = document.getElementById('avg-percent-' + subId);
+    if (avgEl) avgEl.textContent = formatted.main;
+    if (avgPercentEl) avgPercentEl.textContent = formatted.percent;
+
+    const wrapper = document.querySelector(`#sub-${subId} .chart-wrapper`);
+    if (wrapper) {
+        const badge = wrapper.querySelector('.unit-badge');
+        if (badge) badge.style.background = getTabColor(currentTab);
+    }
+
+    const singleEl = document.getElementById('chart-container-' + subId);
+    const multiEl = document.getElementById('multi-' + subId);
+    const yoyEl = document.getElementById('yoy-' + subId);
+    
+    if (singleEl) singleEl.style.display = (!overviewMode && !yoyMode) ? 'block' : 'none';
+    if (multiEl) multiEl.style.display = overviewMode ? 'grid' : 'none';
+    if (yoyEl) yoyEl.style.display = yoyMode ? 'block' : 'none';
+
+    destroyChart('chart-' + subId);
+    destroyChart('chart-' + subId + '-m');
+    destroyChart('chart-' + subId + '-q');
+    destroyChart('chart-' + subId + '-s');
+    destroyChart('chart-' + subId + '-y');
+    destroyChart('chart-' + subId + '-yoy');
+
+    const isQ = series.quarterly === true;
+
+    if (yoyMode) {
+        if (isQ) {
+            renderYoYQuarterlyChart('chart-' + subId + '-yoy', seriesKey);
+        } else {
+            renderYoYChart('chart-' + subId + '-yoy', seriesKey);
+        }
+        return;
+    }
+
+    if (overviewMode) {
+        if (isQ) {
+            const year = document.getElementById('yearFilter').value;
+            const tl = maskTimelineByYear(getQuarterTimeline(series), year);
+            const aggQ = aggregateQuarterTimeline(tl, 1);
+            const aggS = aggregateQuarterTimeline(tl, 2);
+            const aggY = aggregateQuarterTimeline(tl, 4);
+            
+            const monthlyContainer = document.getElementById('chart-' + subId + '-m').parentElement;
+            if (monthlyContainer) monthlyContainer.style.display = 'none';
+            
+            renderSingleChart('chart-' + subId + '-q', aggQ.labels, aggQ.data, seriesKey, 'سه‌ماهه');
+            renderSingleChart('chart-' + subId + '-s', aggS.labels, aggS.data, seriesKey, 'شش‌ماهه');
+            renderSingleChart('chart-' + subId + '-y', aggY.labels, aggY.data, seriesKey, 'سالانه');
+        } else if (series.isOEE) {
+            /* ⭐ اصلاح: فقط داده‌های معتبر را در نظر بگیر */
+            const indices = getFilteredIndices();
+            const baseData = indices.map(i => ({ l: ALL_MONTHLY_LABELS[i], v: series.values[i] })).filter(x => !isNaN(x.v) && x.v !== null);
+            const L = baseData.map(x => x.l);
+            const D = baseData.map(x => x.v);
+            
+            const aggM = { labels: L, data: D };
+            const aggQ = aggregateOEEQuarterlyFromData(L, D);
+            const aggS = aggregateOEESemiFromData(L, D);
+            const aggY = aggregateOEEYearlyFromData(L, D);
+            
+            const monthlyContainer = document.getElementById('chart-' + subId + '-m').parentElement;
+            if (monthlyContainer) monthlyContainer.style.display = 'block';
+            
+            renderSingleChart('chart-' + subId + '-m', aggM.labels, aggM.data, seriesKey, 'ماهانه');
+            renderSingleChart('chart-' + subId + '-q', aggQ.labels, aggQ.data, seriesKey, 'سه‌ماهه');
+            renderSingleChart('chart-' + subId + '-s', aggS.labels, aggS.data, seriesKey, 'شش‌ماهه');
+            renderSingleChart('chart-' + subId + '-y', aggY.labels, aggY.data, seriesKey, 'سالانه');
+        } else {
+            const indices = getFilteredIndices();
+            const aggM = getMonthlyPPM(seriesKey);
+            const aggQ = aggregatePPMQuarterly(series.production, series.scrap, indices);
+            const aggS = aggregatePPMSemi(series.production, series.scrap, indices);
+            const aggY = aggregatePPMYearly(series.production, series.scrap, indices);
+            
+            const monthlyContainer = document.getElementById('chart-' + subId + '-m').parentElement;
+            if (monthlyContainer) monthlyContainer.style.display = 'block';
+            
+            renderSingleChart('chart-' + subId + '-m', aggM.labels, aggM.data, seriesKey, 'ماهانه');
+            renderSingleChart('chart-' + subId + '-q', aggQ.labels, aggQ.data, seriesKey, 'سه‌ماهه');
+            renderSingleChart('chart-' + subId + '-s', aggS.labels, aggS.data, seriesKey, 'شش‌ماهه');
+            renderSingleChart('chart-' + subId + '-y', aggY.labels, aggY.data, seriesKey, 'سالانه');
+        }
+        return;
+    }
+
+    if (isQ) {
+        const year = document.getElementById('yearFilter').value;
+        const tl = maskTimelineByYear(getQuarterTimeline(series), year);
+        const span = (viewMode === 'semiannual') ? 2 : (viewMode === 'yearly') ? 4 : 1;
+        const agg = aggregateQuarterTimeline(tl, span);
+        const name = (span === 1) ? 'سه‌ماهه' : (span === 2) ? 'شش‌ماهه' : 'سالانه';
+        renderSingleChart('chart-' + subId, agg.labels, agg.data, seriesKey, name);
+    } else if (series.isOEE) {
+        const indices = getFilteredIndices();
+        let labels, data;
+        if (viewMode === 'monthly') {
+            labels = indices.map(i => ALL_MONTHLY_LABELS[i]);
+            data = indices.map(i => series.values[i]);
+            const valid = [];
+            labels.forEach((l, i) => {
+                if (!isNaN(data[i]) && data[i] !== null) valid.push({ l, v: data[i] });
+            });
+            labels = valid.map(x => x.l);
+            data = valid.map(x => x.v);
+        } else if (viewMode === 'quarterly') {
+            const baseData = indices.map(i => ({ l: ALL_MONTHLY_LABELS[i], v: series.values[i] })).filter(x => !isNaN(x.v) && x.v !== null);
+            const L = baseData.map(x => x.l);
+            const D = baseData.map(x => x.v);
+            const agg = aggregateOEEQuarterlyFromData(L, D);
+            labels = agg.labels; data = agg.data;
+        } else if (viewMode === 'semiannual') {
+            const baseData = indices.map(i => ({ l: ALL_MONTHLY_LABELS[i], v: series.values[i] })).filter(x => !isNaN(x.v) && x.v !== null);
+            const L = baseData.map(x => x.l);
+            const D = baseData.map(x => x.v);
+            const agg = aggregateOEESemiFromData(L, D);
+            labels = agg.labels; data = agg.data;
+        } else {
+            const baseData = indices.map(i => ({ l: ALL_MONTHLY_LABELS[i], v: series.values[i] })).filter(x => !isNaN(x.v) && x.v !== null);
+            const L = baseData.map(x => x.l);
+            const D = baseData.map(x => x.v);
+            const agg = aggregateOEEYearlyFromData(L, D);
+            labels = agg.labels; data = agg.data;
+        }
+        renderSingleChart('chart-' + subId, labels, data, seriesKey);
+    } else {
+        let labels, data;
+        if (viewMode === 'monthly') {
+            const agg = getMonthlyPPM(seriesKey);
+            labels = agg.labels; data = agg.data;
+        } else if (viewMode === 'quarterly') {
+            const indices = getFilteredIndices();
+            const agg = aggregatePPMQuarterly(series.production, series.scrap, indices);
+            labels = agg.labels; data = agg.data;
+        } else if (viewMode === 'semiannual') {
+            const indices = getFilteredIndices();
+            const agg = aggregatePPMSemi(series.production, series.scrap, indices);
+            labels = agg.labels; data = agg.data;
+        } else {
+            const indices = getFilteredIndices();
+            const agg = aggregatePPMYearly(series.production, series.scrap, indices);
+            labels = agg.labels; data = agg.data;
+        }
+        renderSingleChart('chart-' + subId, labels, data, seriesKey);
+    }
+}
+
+function renderYoYChart(canvasId, seriesKey) {
+    const ctx = document.getElementById(canvasId);
+    if (!ctx) return;
+    destroyChart(canvasId);
+    const series = DATA[seriesKey];
+    const colors = getYoyColors();
+    const datasets = [];
+
+    YEARS.forEach((year, idx) => {
+        const startIdx = (year - 1402) * 12;
+        let data;
+        if (series.isOEE) {
+            data = series.values.slice(startIdx, startIdx + 12);
+        } else {
+            const prod = series.production.slice(startIdx, startIdx + 12);
+            const scrap = series.scrap.slice(startIdx, startIdx + 12);
+            data = [];
+            for (let m = 0; m < 12; m++) {
+                const p = prod[m], s = scrap[m];
+                if (!isNaN(p) && p !== null && !isNaN(s) && s !== null) {
+                    if (p === 0) {
+                        if (s === 0) {
+                            data.push(0);
+                        } else {
+                            data.push(null);
+                        }
+                    } else {
+                        data.push(+((s / p) * 1000000).toFixed(2));
+                    }
+                } else {
+                    data.push(null);
+                }
+            }
+        }
+        const hasData = data.some(v => v !== null && !isNaN(v));
+        if (hasData) {
+            datasets.push(makeDataset(String(year), data, colors[idx], { spanGaps: false }));
+        }
+    });
+
+    addTargetLines(datasets, series, 12);
+
+    CHARTS[canvasId] = new Chart(ctx, {
+        type: 'line',
+        data: { labels: MONTHS_FA, datasets },
+        options: getChartOptions(series)
+    });
+}
+
+/* ⭐ اصلاح: YoY برای شاخص‌های سه‌ماهه - شناسایی صحیح سال‌ها */
+function renderYoYQuarterlyChart(canvasId, seriesKey) {
+    const ctx = document.getElementById(canvasId);
+    if (!ctx) return;
+    destroyChart(canvasId);
+    const series = DATA[seriesKey];
+    const colors = getYoyColors();
+    const datasets = [];
+
+    /* ⭐ اصلاح: شناسایی صحیح سال‌ها با تبدیل عدد دو رقمی به چهار رقمی */
+    const availableYears = [];
+    YEARS.forEach(year => {
+        const yearData = series.values.filter((v, i) => {
+            const parts = series.labels[i].split(' ');
+            const labelYearShort = parseInt(parts[1], 10);
+            const labelYear = labelYearShort < 100 ? 1400 + labelYearShort : labelYearShort;
+            return labelYear === year && !isNaN(v) && v !== null;
+        });
+        if (yearData.length > 0) availableYears.push(year);
+    });
+
+    availableYears.forEach((year) => {
+        const colorIdx = YEARS.indexOf(year);
+        const data = [];
+        SEASONS_FA.forEach(season => {
+            const label = season + ' ' + String(year).slice(-2);
+            const i = series.labels.indexOf(label);
+            if (i >= 0 && !isNaN(series.values[i]) && series.values[i] !== null) {
+                data.push(series.values[i]);
+            } else {
+                data.push(null);
+            }
+        });
+        if (data.some(v => v !== null)) {
+            datasets.push(makeDataset(String(year), data, colors[colorIdx], { spanGaps: false }));
+        }
+    });
+
+    if (datasets.length === 0) {
+        CHARTS[canvasId] = new Chart(ctx, {
+            type: 'line',
+            data: { labels: SEASONS_FA, datasets: [] },
+            options: getChartOptions(series)
+        });
+        return;
+    }
+
+    addTargetLines(datasets, series, 4);
+
+    CHARTS[canvasId] = new Chart(ctx, {
+        type: 'line',
+        data: { labels: SEASONS_FA, datasets },
+        options: getChartOptions(series)
+    });
+}
+
+function switchTab(tabId) {
+    currentTab = tabId;
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    const btn = document.querySelector('[data-tab="' + tabId + '"]');
+    if (btn) btn.classList.add('active');
+    const firstSubBtn = document.querySelector('#' + tabId + ' .sub-tab-btn');
+    if (firstSubBtn) switchSubTab(firstSubBtn.dataset.subtab);
+}
+
+function switchSubTab(subId) {
+    document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.sub-pane').forEach(p => p.classList.remove('active'));
+    const btn = document.querySelector('[data-subtab="' + subId + '"]');
+    if (btn) btn.classList.add('active');
+    const pane = document.getElementById('sub-' + subId);
+    if (pane) pane.classList.add('active');
+    currentSubTab = subId;
+    currentTab = SUB_TO_TAB[subId] || currentTab;
+    
+    updateViewModeOptions();
+    
+    setTimeout(() => renderChart(subId), 50);
+}
+
+function updateCurrentChart() {
+    renderChart(currentSubTab);
+}
+
+function resetFilters() {
+    document.getElementById('yearFilter').value = 'all';
+    document.getElementById('monthFilter').value = 'all';
+    document.getElementById('modeOverview').checked = false;
+    document.getElementById('modeYoY').checked = false;
+    overviewMode = false;
+    yoyMode = false;
+    document.getElementById('modeOverviewBox').classList.remove('active-mode');
+    document.getElementById('modeYoYBox').classList.remove('active-mode');
+    updateViewModeOptions();
+    updateCurrentChart();
+}
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+    if (theme === 'dark') { icon.textContent = '☀️'; label.textContent = 'حالت روز'; }
+    else { icon.textContent = '🌙'; label.textContent = 'حالت شب'; }
+    localStorage.setItem('theme', theme);
+    updateCurrentChart();
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+window.addEventListener('load', () => {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
+    buildTabContent();
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    document.getElementById('tabContent').addEventListener('click', (e) => {
+        if (e.target.classList.contains('sub-tab-btn')) {
+            switchSubTab(e.target.dataset.subtab);
+        }
+    });
+
+    document.getElementById('yearFilter').addEventListener('change', updateCurrentChart);
+    document.getElementById('monthFilter').addEventListener('change', updateCurrentChart);
+    document.getElementById('viewModeFilter').addEventListener('change', (e) => {
+        viewMode = e.target.value;
+        updateCurrentChart();
+    });
+
+    document.getElementById('modeOverview').addEventListener('change', (e) => {
+        overviewMode = e.target.checked;
+        if (overviewMode) {
+            document.getElementById('modeYoY').checked = false;
+            yoyMode = false;
+            document.getElementById('modeYoYBox').classList.remove('active-mode');
+        }
+        document.getElementById('modeOverviewBox').classList.toggle('active-mode', overviewMode);
+        updateCurrentChart();
+    });
+
+    document.getElementById('modeYoY').addEventListener('change', (e) => {
+        yoyMode = e.target.checked;
+        if (yoyMode) {
+            document.getElementById('modeOverview').checked = false;
+            overviewMode = false;
+            document.getElementById('modeOverviewBox').classList.remove('active-mode');
+        }
+        document.getElementById('modeYoYBox').classList.toggle('active-mode', yoyMode);
+        updateCurrentChart();
+    });
+
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+    updateViewModeOptions();
+    renderChart('internal-total');
+});
+</script>
+
+</body>
+</html>
